@@ -38,11 +38,11 @@ def _has_cmd(cmd: str) -> bool:
 
 def check_recording_availability() -> tuple[bool, str | None]:
     """Return (available, reason_if_not)."""
-    # sounddevice
+    # sounddevice (ImportError = not installed; OSError = PortAudio library missing)
     try:
         import sounddevice  # noqa: F401
         return True, None
-    except ImportError:
+    except (ImportError, OSError):
         pass
 
     # arecord
@@ -225,7 +225,7 @@ def record_until_silence(
     try:
         import sounddevice  # noqa: F401
         return _record_sounddevice(max_seconds=max_seconds, on_energy=on_energy)
-    except ImportError:
+    except (ImportError, OSError):
         pass
 
     if _has_cmd("arecord"):
