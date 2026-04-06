@@ -1,6 +1,6 @@
 # Architecture Guide
 
-This document is for developers who want to understand, modify, or extend clawnest.
+This document is for developers who want to understand, modify, or extend clawspring.
 For user-facing docs, see [README.md](../README.md).
 
 ---
@@ -15,7 +15,7 @@ module layout designed for readability and future migration to a package structu
 User Input
     │
     ▼
-clawnest.py  ── REPL, slash commands, rendering
+clawspring.py  ── REPL, slash commands, rendering
     │
     ├──► agent.py  ── multi-turn loop, permission gates
     │       │
@@ -169,12 +169,12 @@ Runs snip first (cheap), then auto-compact if still over.
 
 ### `memory.py` — Persistent Memory
 
-File-based memory system stored in `~/.clawnest/memory/`.
+File-based memory system stored in `~/.clawspring/memory/`.
 
 **Storage format:**
 
 ```
-~/.clawnest/memory/
+~/.clawspring/memory/
 ├── MEMORY.md              # Index: one line per memory
 ├── user_preferences.md    # Individual memory file
 └── project_auth.md
@@ -248,8 +248,8 @@ Your prompt instructions here...
 **Execution:** `execute_skill()` wraps the skill prompt as a user message and calls
 `agent.run()`. The skill runs through the exact same agent loop as a normal query.
 
-**Search order:** Project-level (`./.clawnest/skills/`) overrides user-level
-(`~/.clawnest/skills/`) when skill names collide.
+**Search order:** Project-level (`./.clawspring/skills/`) overrides user-level
+(`~/.clawspring/skills/`) when skill names collide.
 
 ### `providers.py` — Multi-Provider Abstraction
 
@@ -284,7 +284,7 @@ Assembles the system prompt from:
 
 ### `config.py` — Configuration
 
-Defaults stored in `~/.clawnest/config.json`. Key settings:
+Defaults stored in `~/.clawspring/config.json`. Key settings:
 
 | Key | Default | Description |
 |---|---|---|
@@ -302,7 +302,7 @@ Defaults stored in `~/.clawnest/config.json`. Key settings:
 A user asks "Read config.py and change max_tokens to 16384":
 
 ```
-1. clawnest.py captures input
+1. clawspring.py captures input
 2. agent.run() appends user message, calls maybe_compact()
 3. providers.stream() sends to Gemini API with 13 tool schemas
 4. Model responds: text + tool_call[Read(config.py)]
@@ -312,7 +312,7 @@ A user asks "Read config.py and change max_tokens to 16384":
 8. Model responds: text + tool_call[Edit(config.py, "8192", "16384")]
 9. agent.py checks permission (Edit = not read_only → ask user)
 10. User approves → tools.py._edit() runs, generates diff
-11. clawnest.py renders diff with ANSI colors (red/green)
+11. clawspring.py renders diff with ANSI colors (red/green)
 12. Tool result appended, loop back to step 3
 13. Model responds: "Done, max_tokens changed to 16384"
 14. No tool_calls → loop ends, TurnDone yielded
@@ -347,7 +347,7 @@ When `tools.py` or `agent.py` grow too large, the flat layout can be migrated to
 ```
 ncc/
 ├── __init__.py
-├── repl.py              # from clawnest.py
+├── repl.py              # from clawspring.py
 ├── agent/
 │   ├── loop.py          # from agent.py
 │   ├── subagent.py      # from subagent.py

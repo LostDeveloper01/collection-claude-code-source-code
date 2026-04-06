@@ -1,4 +1,4 @@
-"""Tool definitions and implementations for ClawNest."""
+"""Tool definitions and implementations for ClawSpring."""
 import json
 import os
 import re
@@ -771,7 +771,7 @@ def _ask_user_question(
     """
     Block the agent loop and surface a question to the user in the terminal.
 
-    The REPL loop (clawnest.py) periodically calls drain_pending_questions()
+    The REPL loop (clawspring.py) periodically calls drain_pending_questions()
     to render any questions and collect answers.  We use a threading.Event to
     block this call until the user responds.
     """
@@ -870,7 +870,7 @@ def _sleeptimer(seconds: int, config: dict) -> str:
     import threading
     cb = config.get("_run_query_callback")
     if not cb:
-        return "Error: Internal callback missing, clawnest did not provide _run_query_callback"
+        return "Error: Internal callback missing, clawspring did not provide _run_query_callback"
         
     def worker():
         import time

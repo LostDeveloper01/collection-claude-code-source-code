@@ -1,4 +1,4 @@
-"""Multi-agent package for clawnest.
+"""Multi-agent package for clawspring.
 
 Provides:
   - AgentDefinition  — typed agent definition (name, system_prompt, model, tools)

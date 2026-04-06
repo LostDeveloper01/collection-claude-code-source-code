@@ -28,8 +28,8 @@ class SkillDef:
 
 def _get_skill_paths() -> list[Path]:
     return [
-        Path.cwd() / ".clawnest" / "skills",   # project-level (priority)
-        Path.home() / ".clawnest" / "skills",   # user-level
+        Path.cwd() / ".clawspring" / "skills",   # project-level (priority)
+        Path.home() / ".clawspring" / "skills",   # user-level
     ]
 
 

@@ -1,6 +1,6 @@
-# ClawNest — Update Notes
+# ClawSpring — Update Notes
 
-This document describes three major feature additions to clawnest:
+This document describes three major feature additions to clawspring:
 **Multi-Agent**, **Memory**, and **Skill**. Each feature is organized as a
 self-contained Python package, follows the same architectural pattern, and
 includes a backward-compatibility shim so existing code continues to work.
@@ -65,8 +65,8 @@ class AgentDefinition:
 **Built-in agent types**: `general-purpose`, `coder`, `reviewer`, `researcher`, `tester`
 
 **Custom agent definitions** — place a `.md` file with YAML frontmatter in:
-- `~/.clawnest/agents/<name>.md` (user-level)
-- `.clawnest/agents/<name>.md` (project-level, takes priority)
+- `~/.clawspring/agents/<name>.md` (user-level)
+- `.clawspring/agents/<name>.md` (project-level, takes priority)
 
 Frontmatter format:
 ```markdown
@@ -131,7 +131,7 @@ Agent(
    ```
 4. `context.py` system prompt template lists Agent, SendMessage, etc. under
    `## Multi-Agent`.
-5. `clawnest.py` `/agents` command calls `get_agent_manager().list_tasks()`
+5. `clawspring.py` `/agents` command calls `get_agent_manager().list_tasks()`
    and prints status/worktree info. A `_print_background_notifications()` function
    checks for newly completed background agents before each user prompt.
 
@@ -146,7 +146,7 @@ Agent(
 | `agent.py` | Inject `_system_prompt` into config |
 | `tools.py` | Pass config to registry; import `multi_agent.tools` |
 | `context.py` | Add Multi-Agent section to system prompt |
-| `clawnest.py` | `/agents` command; background notification; `_tool_desc()` |
+| `clawspring.py` | `/agents` command; background notification; `_tool_desc()` |
 | `tests/test_subagent.py` | Update imports to `multi_agent.subagent` |
 
 ---
@@ -157,7 +157,7 @@ Agent(
 
 Provides persistent, file-based memory across sessions. Memories are stored as
 markdown files with YAML frontmatter. There are two scopes — **user** (global,
-`~/.clawnest/memory/`) and **project** (per-repo, `.clawnest/memory/`).
+`~/.clawspring/memory/`) and **project** (per-repo, `.clawspring/memory/`).
 A `MEMORY.md` index is auto-rebuilt after every save/delete and injected into
 the system prompt so Claude knows what memories exist.
 
@@ -188,13 +188,13 @@ Defined in `memory/types.py`, mirrors the four types from Claude Code:
 ### Storage layout
 
 ```
-~/.clawnest/memory/
+~/.clawspring/memory/
   MEMORY.md          ← auto-generated index (<=200 lines, <=25 KB)
   my_note.md
   feedback_testing.md
   ...
 
-.clawnest/memory/   ← project-local (relative to cwd)
+.clawspring/memory/   ← project-local (relative to cwd)
   MEMORY.md
   ...
 ```
@@ -275,7 +275,7 @@ The `MEMORY.md` index is truncated before being injected into the system prompt:
    from memory.store import MemoryEntry, save_memory, ...
    from memory.context import get_memory_context
    ```
-5. `clawnest.py` `/memory` command uses `scan_all_memories()` to display a
+5. `clawspring.py` `/memory` command uses `scan_all_memories()` to display a
    mtime-sorted list with freshness warnings.
 
 ### Files changed
@@ -291,7 +291,7 @@ The `MEMORY.md` index is truncated before being injected into the system prompt:
 | `memory.py` | Converted to backward-compat shim |
 | `tools.py` | Import `memory.tools` |
 | `context.py` | Call `get_memory_context()` in `build_system_prompt()` |
-| `clawnest.py` | `/memory` command uses `scan_all_memories()` |
+| `clawspring.py` | `/memory` command uses `scan_all_memories()` |
 | `tests/test_memory.py` | Completely rewritten (101 tests total) |
 
 ---
@@ -321,8 +321,8 @@ skills.py       — backward-compat shim
 ### Skill file format
 
 Place `.md` files in:
-- `~/.clawnest/skills/<name>.md` (user-level)
-- `.clawnest/skills/<name>.md` (project-level, takes priority)
+- `~/.clawspring/skills/<name>.md` (user-level)
+- `.clawspring/skills/<name>.md` (project-level, takes priority)
 
 ```markdown
 ---
@@ -406,7 +406,7 @@ Project-level skill files with the same name override built-ins.
 When multiple skill sources define the same name, the highest priority wins:
 
 ```
-builtin  <  user (~/.clawnest/skills/)  <  project (.clawnest/skills/)
+builtin  <  user (~/.clawspring/skills/)  <  project (.clawspring/skills/)
 ```
 
 ### REPL usage
@@ -431,7 +431,7 @@ and the first 80 chars of `when_to_use` per skill.
    ```
 3. `skills.py` (top-level) becomes a shim re-exporting from `skill/`.
 4. `context.py` adds a `## Skills` section listing `Skill` and `SkillList`.
-5. `clawnest.py`:
+5. `clawspring.py`:
    - `cmd_skills` imports from `skill`, shows `when_to_use` and source label
    - `handle_slash` imports `find_skill` from `skill`; returns `(skill, args)` tuple
    - REPL loop calls `substitute_arguments` before building the injected message
@@ -448,7 +448,7 @@ and the first 80 chars of `when_to_use` per skill.
 | `skills.py` | Converted to backward-compat shim |
 | `tools.py` | Import `skill.tools` |
 | `context.py` | Add Skills section to system prompt |
-| `clawnest.py` | `cmd_skills`, `handle_slash`, REPL loop updated |
+| `clawspring.py` | `cmd_skills`, `handle_slash`, REPL loop updated |
 | `tests/test_skills.py` | Rewritten (22 tests; patches `skill.loader`) |
 
 ---
@@ -457,7 +457,7 @@ and the first 80 chars of `when_to_use` per skill.
 
 ### Custom agent type
 
-Create `~/.clawnest/agents/myagent.md`:
+Create `~/.clawspring/agents/myagent.md`:
 ```markdown
 ---
 name: myagent
@@ -473,7 +473,7 @@ Then use: `Agent(prompt="...", subagent_type="myagent")`
 ### Custom memory
 
 Use the REPL `MemorySave` tool or write a file directly to
-`~/.clawnest/memory/my_note.md` with frontmatter:
+`~/.clawspring/memory/my_note.md` with frontmatter:
 ```markdown
 ---
 name: my note
@@ -486,8 +486,8 @@ Memory content here.
 
 ### Custom skill
 
-Create `~/.clawnest/skills/myskill.md` (user-level) or
-`.clawnest/skills/myskill.md` (project-level):
+Create `~/.clawspring/skills/myskill.md` (user-level) or
+`.clawspring/skills/myskill.md` (project-level):
 ```markdown
 ---
 name: myskill
@@ -510,7 +510,7 @@ Then invoke with `/myskill some-target`.
 ## Running tests
 
 ```bash
-cd clawnest
+cd clawspring
 
 # All tests
 python -m pytest tests/ -v
@@ -522,5 +522,5 @@ python -m pytest tests/test_skills.py   -v   # skills
 ```
 
 Total: **101 tests**, all passing. Each feature's tests use `monkeypatch` to
-redirect file system paths to `tmp_path` so no real `~/.clawnest/`
+redirect file system paths to `tmp_path` so no real `~/.clawspring/`
 directories are touched during testing.

@@ -202,39 +202,39 @@ class TestVoiceInit:
 
 class TestReplVoiceIntegration:
     def test_voice_in_commands(self):
-        import clawnest
-        assert "voice" in clawnest.COMMANDS
+        import clawspring
+        assert "voice" in clawspring.COMMANDS
 
     def test_voice_command_callable(self):
-        import clawnest
-        assert callable(clawnest.COMMANDS["voice"])
+        import clawspring
+        assert callable(clawspring.COMMANDS["voice"])
 
     def test_handle_slash_voice_sentinel(self):
         """handle_slash('/voice ...') propagates __voice__ sentinel from cmd_voice."""
-        import clawnest
+        import clawspring
 
         # Patch cmd_voice to return a sentinel directly
         sentinel = ("__voice__", "hello world")
-        with patch.object(clawnest, "cmd_voice", return_value=sentinel):
+        with patch.object(clawspring, "cmd_voice", return_value=sentinel):
             # Re-bind in COMMANDS so the patch is seen
-            clawnest.COMMANDS["voice"] = clawnest.cmd_voice
-            result = clawnest.handle_slash("/voice", object(), {})
+            clawspring.COMMANDS["voice"] = clawspring.cmd_voice
+            result = clawspring.handle_slash("/voice", object(), {})
             assert result == sentinel
 
     def test_voice_status_no_crash(self, capsys):
         """'/voice status' should not raise even without audio hardware."""
-        import clawnest
+        import clawspring
         # Should not raise
         try:
-            clawnest.cmd_voice("status", object(), {})
+            clawspring.cmd_voice("status", object(), {})
         except SystemExit:
             pass
         # Output captured — just ensure no uncaught exception
 
     def test_voice_lang_set(self, capsys):
-        import clawnest
-        clawnest.cmd_voice("lang zh", object(), {})
-        assert clawnest._voice_language == "zh"
+        import clawspring
+        clawspring.cmd_voice("lang zh", object(), {})
+        assert clawspring._voice_language == "zh"
         # Reset
-        clawnest.cmd_voice("lang auto", object(), {})
-        assert clawnest._voice_language == "auto"
+        clawspring.cmd_voice("lang auto", object(), {})
+        assert clawspring._voice_language == "auto"

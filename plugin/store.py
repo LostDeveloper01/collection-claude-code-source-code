@@ -12,14 +12,14 @@ from .types import PluginEntry, PluginManifest, PluginScope, parse_plugin_identi
 
 # ── Config paths ──────────────────────────────────────────────────────────────
 
-USER_PLUGIN_DIR  = Path.home() / ".clawnest" / "plugins"
-USER_PLUGIN_CFG  = Path.home() / ".clawnest" / "plugins.json"
+USER_PLUGIN_DIR  = Path.home() / ".clawspring" / "plugins"
+USER_PLUGIN_CFG  = Path.home() / ".clawspring" / "plugins.json"
 
 def _project_plugin_dir() -> Path:
-    return Path.cwd() / ".clawnest" / "plugins"
+    return Path.cwd() / ".clawspring" / "plugins"
 
 def _project_plugin_cfg() -> Path:
-    return Path.cwd() / ".clawnest" / "plugins.json"
+    return Path.cwd() / ".clawspring" / "plugins.json"
 
 
 # ── Config read/write ─────────────────────────────────────────────────────────

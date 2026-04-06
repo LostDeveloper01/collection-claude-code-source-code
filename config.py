@@ -1,9 +1,9 @@
-"""Configuration management for ClawNest (multi-provider)."""
+"""Configuration management for ClawSpring (multi-provider)."""
 import os
 import json
 from pathlib import Path
 
-CONFIG_DIR        = Path.home() / ".clawnest"
+CONFIG_DIR        = Path.home() / ".clawspring"
 CONFIG_FILE       = CONFIG_DIR  / "config.json"
 HISTORY_FILE      = CONFIG_DIR  / "input_history.txt"
 SESSIONS_DIR      = CONFIG_DIR  / "sessions"

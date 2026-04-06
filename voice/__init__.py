@@ -1,4 +1,4 @@
-"""Voice package for clawnest.
+"""Voice package for clawspring.
 
 Public API
 ----------
